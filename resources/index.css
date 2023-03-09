@@ -1,0 +1,186 @@
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #66c4a8;
+    font-family: 'Pt Serif', sans-serif;
+}
+
+hr {
+    background-color: #000;
+    display: block;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+div {
+    word-wrap: break-word;
+}
+
+input[type="file"] {
+    font-family: 'Pt Serif', sans-serif;
+    width: 50%;
+}
+
+select {
+    font-weight: bold;
+    font-family: 'Pt Serif', sans-serif;
+    padding: 5px 5px 5px 5px;
+    background-color: #f0f0f0;
+}
+
+#title {
+    font-size: 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    text-align: center;
+    color: #ffffff;
+    padding-top: 120px;
+    margin: auto;
+    padding-bottom: 120px;
+    word-wrap: break-word;
+}
+
+.userbanner {
+    font-size: 25px;
+    display: table;
+    margin: 0 auto;
+    line-height: 0.2;
+}
+
+.button, input::file-selector-button {
+    font-weight: bold;
+    font-family: 'Pt Serif', sans-serif;
+    padding: 5px 10px 5px 10px;
+}
+
+.half-width {
+    font-size: 18px;
+    margin-left: 10%;
+    width: 50%;
+}
+
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.infotext {
+    font-weight: bold;
+}
+
+.input {
+    padding: 6px 6px 6px 6px;
+}
+
+.inputgroup {
+    margin-bottom: 10px;
+}
+
+.loadinggif {
+    width: 20px;
+    height: 20px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+    margin-right: 5%;
+}
+
+.center {
+    margin: auto;
+    text-align: center;
+}
+
+.table {
+    display: table;
+}
+
+/* CSS for desktop only */
+@media screen and (min-width: 961px) {
+    .taskscrollbox {
+        height: calc(100vh / 2.5);
+        overflow: auto;
+    }
+    .taskscontainer h2 {
+        margin-bottom: auto;
+    }
+}
+
+/* CSS for any mobile device */
+@media screen and (max-width: 600px) {
+    /* Display title neatly on mobile devices */
+    .half-width {
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    #title {
+        padding-top: 200px;
+    }
+
+    /* Align the login form and button to the center */
+    form[action="login.php"] {
+        position: relative;
+        margin-left: 24%;
+        margin-top: 10px;
+    }
+    form[action="login.php"] > input[type="submit"] {
+        display: block;
+        margin-left: 23%;
+    }
+
+    form[action="index.php"] > input[type="submit"] {
+        margin-top: 22px;
+    }
+
+    input[type="file"] {
+        width: 55%;
+    }
+}
+
+/* CSS for BOTH macOS and iOS */
+@supports (font: -apple-system-body) and (-webkit-appearance: none) {
+    /* CSS for macOS only */
+    @media screen and (min-width: 961px) {
+        * {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+    }
+
+    /* Show website's custom button style on macOS and iOS */
+    input[type="submit"], button, input::file-selector-button {
+        border-radius: 0;
+        border: 0.5px solid #000;
+        color: #000;
+        background-color: #FCFCFC;
+    }
+    button:disabled {
+        border: 1px solid #999999;
+        background-color: #cccccc;
+        color: #666666;
+    }
+}
+
+/* CSS for iOS only */
+@supports (-webkit-touch-callout: none) {
+    * :not(select) {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+    }
+
+    input, select, textarea {
+        font-size: 16px;
+    }
+    
+    p:has(a), .inputgroup {
+        font-size: 20px;
+    }
+}
