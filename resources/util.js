@@ -82,3 +82,5 @@ export const listArrItems = (arr) =>
 
 export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const sleepSec = seconds => sleep(seconds * 1000);
+
+export const CAPTCHA_ENABLED = true;

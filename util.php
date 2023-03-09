@@ -19,15 +19,12 @@
     
     //Some useful constants
     const BCRYPT_COST = 12;
-    const LOGGING_ENABLED = false;
+    const GLOBAL_LOGGING_ENABLED = false;
+    const CAPTCHA_ENABLED = true;
     const WEBSITE_NAME = "Task Master";
     const GET = "GET";
     const POST = "POST";
     define("PACIFIC", new DateTimeZone("America/Los_Angeles"));
-
-    // if (!isset($_COOKIE['website_name']) || !$_COOKIE['website_name']) {
-    //     setcookie("website_name", WEBSITE_NAME);
-    // }
 
     //Database credentials
     define("DB_HOST", getenv("DB_HOST"));
@@ -90,6 +87,9 @@
          * on the page where this function was called, false otherwise.
          */
         public static function verify_captcha(): bool {
+            if (!CAPTCHA_ENABLED) {
+                return true;
+            }
             $user_token = $_POST['g-recaptcha-response'] ?? null;
             if (!$user_token) {
                 return false;
@@ -167,7 +167,7 @@
          * @return void
          */
         public static function log(string $file_path, mixed $content, bool $bypass = false): void {
-            if (!LOGGING_ENABLED && !$bypass) return;
+            if (!GLOBAL_LOGGING_ENABLED && !$bypass) return;
             $date = new DateTime("now", PACIFIC);
             $now = $date->format("Y-m-d H:i:s");
             $file_path = strpos($file_path, "/") === false ? "./logs/$file_path" : $file_path;
@@ -208,7 +208,7 @@
          * @return void
          */
         public static function log_ip_count(string $file_path): void {
-            if (!LOGGING_ENABLED) return;
+            if (!GLOBAL_LOGGING_ENABLED) return;
             self::create_file_if_not_exists($file_path);
 
             //Read each line of file into array before clearing the original

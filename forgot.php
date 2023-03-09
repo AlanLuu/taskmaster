@@ -13,18 +13,20 @@
         <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script type="module">
-            import { verifyCaptcha } from "./resources/util.js";
-            const [form] = document.getElementsByTagName("form");
-            form.addEventListener("submit", e => {
-                e.preventDefault();
-                const infoMsg = document.getElementById("infomsg");
-                if (verifyCaptcha()) {
-                    infoMsg.textContent = "";
-                    form.submit();
-                } else {
-                    infoMsg.textContent = "Captcha verification failed";
-                }
-            });
+            import { CAPTCHA_ENABLED, verifyCaptcha } from "./resources/util.js";
+            if (CAPTCHA_ENABLED) {
+                const [form] = document.getElementsByTagName("form");
+                form.addEventListener("submit", e => {
+                    e.preventDefault();
+                    const infoMsg = document.getElementById("infomsg");
+                    if (verifyCaptcha()) {
+                        infoMsg.textContent = "";
+                        form.submit();
+                    } else {
+                        infoMsg.textContent = "Captcha verification failed";
+                    }
+                });
+            }
         </script>
     </head>
     <body>
@@ -36,9 +38,11 @@
                 <label for="resetemail">Email associated with account:</label>
                 <input class="input" id="resetemail" type="text" name="resetemail" required>
             </div>
+<?php if (CAPTCHA_ENABLED): ?>
             <div class="inputgroup">
                 <div class="g-recaptcha" data-sitekey="6LfHaackAAAAADZkS6s9XBmCoaGhNEU331gxCZfC"></div>
             </div>
+<?php endif ?>
             <input class="button" type="submit" name="action" value="Submit">
         </form>
         <p class="infotext" id="infomsg">

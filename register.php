@@ -38,10 +38,12 @@
                 <input class="input" id="signupemail" type="text" name="signupemail">
                 <span class="infotext" id="infotextemail"></span>
             </div>
+<?php if (CAPTCHA_ENABLED): ?>
             <div class="inputgroup">
                 <div class="g-recaptcha" data-sitekey="6LfHaackAAAAADZkS6s9XBmCoaGhNEU331gxCZfC"></div>
                 <span class="infotext" id="infotextcaptcha"></span>
             </div>
+<?php endif ?>
             <input class="button" type="submit" name="action" value="Sign Up">
         </form>
         <p><strong>By signing up, you agree to the following <a href="privacy.php">privacy policy</a>.</strong></p>
