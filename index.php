@@ -84,8 +84,8 @@
             </head>
             <body>
                 <div class="userbanner">
-                    <p>Logged in as <strong>$session_user</strong></p>
                     <div class="center">
+                        <p>Logged in as <strong>$session_user</strong></p>
                         <a href="logout.php">Log out</a> | <a href="settings.php">Settings</a>
                     </div>
                 </div> <br> <br>

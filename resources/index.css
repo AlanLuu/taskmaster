@@ -30,6 +30,10 @@ select {
     background-color: #f0f0f0;
 }
 
+table, th, td {
+    border: 1px solid #000;
+}
+
 #title {
     font-size: 40px;
     font-family: 'Bebas Neue', sans-serif;

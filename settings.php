@@ -167,9 +167,13 @@
     </head>
     <body>
         <div class="userbanner">
-            <p>Logged in as <strong><?= $session_user ?></strong></p>
             <div class="center">
-                <a href="logout.php">Log out</a> | <a href="./">Back</a>
+                <p>Logged in as <strong><?= $session_user ?></strong></p>
+                <a href="logout.php">Log out</a>
+                | <a href="./">Back</a>
+<?php if (in_array((int) $_SESSION['account_id'], ADMIN_ACCOUNT_IDS, true)): ?>
+                | <a href="admin.php">Admin panel</a>
+<?php endif ?>
             </div>
         </div> <br>
 

@@ -18,12 +18,13 @@
     ob_start();
     
     //Some useful constants
+    const ADMIN_ACCOUNT_IDS = [1];
     const BCRYPT_COST = 12;
-    const GLOBAL_LOGGING_ENABLED = false;
     const CAPTCHA_ENABLED = true;
-    const WEBSITE_NAME = "Task Master";
     const GET = "GET";
+    const GLOBAL_LOGGING_ENABLED = false;
     const POST = "POST";
+    const WEBSITE_NAME = "Task Master";
     define("PACIFIC", new DateTimeZone("America/Los_Angeles"));
 
     //Database credentials
