@@ -32,6 +32,7 @@
         $session_user = $_SESSION['username']; //This variable has already been sanitized
         $session_user_db = Util::sanitize($session_user, "strtolower",
             "html_entity_decode", fn($str) => preg_replace("/[^A-Za-z0-9]/", "", $str));
+        $session_user_id = (int) $_SESSION['account_id'];
         $website_name = WEBSITE_NAME;
         echo <<< _END
         <!DOCTYPE html>
@@ -151,10 +152,10 @@
     
     $conn = Util::get_conn();
 
-    function insert_content(string $username, string $task, string $task_status): void {
+    function insert_content(int $session_user_id, string $username, string $task, string $task_status): void {
         global $conn;
-        pg_prepare($conn, "insertContent", "INSERT INTO content(task, task_status, username) VALUES($1, $2, $3)");
-        pg_execute($conn, "insertContent", array($task, $task_status, $username));
+        pg_prepare($conn, "insertContent", "INSERT INTO content(task, task_status, account_id, username) VALUES($1, $2, $3, $4)");
+        pg_execute($conn, "insertContent", array($task, $task_status, $session_user_id, $username));
     }
 
     function display_content(): void {
@@ -204,14 +205,14 @@
         if ($task) { //Only insert task when it is not blank
             switch ($_POST['task_status'] ?? null) {
                 case "in_progress":
-                    insert_content($session_user_db, $task, $in_progress);
+                    insert_content($session_user_id, $session_user_db, $task, $in_progress);
                     break;
                 case "completed":
-                    insert_content($session_user_db, $task, $completed);
+                    insert_content($session_user_id, $session_user_db, $task, $completed);
                     break;
                 case "todo":
                 default:
-                    insert_content($session_user_db, $task, $todo);
+                    insert_content($session_user_id, $session_user_db, $task, $todo);
                     break;
             }
         }
@@ -247,11 +248,11 @@
                 }
 
                 //Function to strip newline characters and add to tasks array
-                $process = function(string $line) use(&$tasks, $div_to_insert_at, $session_user_db): void {
+                $process = function(string $line) use(&$tasks, $div_to_insert_at, $session_user_id, $session_user_db): void {
                     $line = Util::sanitize(rtrim($line), "htmlspecialchars", "addslashes");
                     if ($line) {
                         //Add array inside array
-                        $tasks[] = [$line, $div_to_insert_at, $session_user_db];
+                        $tasks[] = [$line, $div_to_insert_at, $session_user_id, $session_user_db];
                     }
                 };
 
@@ -271,7 +272,7 @@
                 //(task, task_status, username) is 3 entries
                 if (count($tasks) > 0) {
                     pg_prepare($conn, "insertMultiple",
-                        "INSERT INTO content(task, task_status, username) VALUES"
+                        "INSERT INTO content(task, task_status, account_id, username) VALUES"
                         . Util::build_insert_params(count($tasks), 3));
                     pg_execute($conn, "insertMultiple", array_merge(...$tasks));
                 }

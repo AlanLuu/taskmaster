@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS content(
     task_id SERIAL PRIMARY KEY,
     task VARCHAR(256) NOT NULL,
     task_status CHAR(1) NOT NULL,
+    account_id INTEGER NOT NULL,
     username CITEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS password_reset_tokens(
