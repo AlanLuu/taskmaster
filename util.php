@@ -102,6 +102,17 @@
         }
 
         /**
+         * Convenience function for hashing a password without
+         * having to manually specify the algorithm and cost
+         *
+         * @param string $password the plaintext password to hash
+         * @return string the hashed password
+         */
+        public static function password_hash(string $password): string {
+            return password_hash($password, PASSWORD_BCRYPT, ['cost' => BCRYPT_COST]);
+        }
+
+        /**
          * I'm a little teapot,
          * Short and stout.
          * Here is my handle,

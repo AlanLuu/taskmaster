@@ -37,7 +37,7 @@
                 }
                 case "resetpass": {
                     $temp_pass = "changeme123";
-                    $temp_pass_hash = password_hash($temp_pass, PASSWORD_BCRYPT, ['cost' => BCRYPT_COST]);
+                    $temp_pass_hash = Util::password_hash($temp_pass);
                     pg_prepare($conn, "reset_pass", "UPDATE passwords SET pass = $1 WHERE account_id = $2");
                     pg_execute($conn, "reset_pass", array($temp_pass_hash, $id_clicked_num));
                     setcookie("status_cookie", "Password successfully reset");

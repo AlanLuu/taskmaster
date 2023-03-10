@@ -95,7 +95,7 @@
         }
 
         //Hash password
-        $hashed_pass = password_hash($tmp_signup_pass, PASSWORD_BCRYPT, ['cost' => BCRYPT_COST]);
+        $hashed_pass = Util::password_hash($tmp_signup_pass);
 
         //Check to see if username is already taken
         pg_prepare($conn, "check_account", "SELECT account_id FROM passwords WHERE username = $1");

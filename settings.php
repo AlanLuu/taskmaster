@@ -134,7 +134,7 @@
                     break;
                 default:
                     //Hash new password, update hash in database, and log the user out
-                    $new_hash = password_hash($new_pass, PASSWORD_BCRYPT, ['cost' => BCRYPT_COST]);
+                    $new_hash = Util::password_hash($new_pass);
                     pg_prepare($conn, "change_password", "UPDATE passwords SET pass = $1 WHERE username = $2");
                     pg_execute($conn, "change_password", array($new_hash, $session_user_db));
                     header("Location: logout.php?password_changed=1");

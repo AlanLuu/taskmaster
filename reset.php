@@ -27,7 +27,7 @@
             $password_changed_str = "New passwords do not match. Please try again.";
         } else { //New password is valid
             $conn = Util::get_conn();
-            $new_hash = password_hash($new_pass, PASSWORD_BCRYPT, ['cost' => BCRYPT_COST]);
+            $new_hash = Util::password_hash($new_pass);
             pg_prepare($conn, "change_password", "UPDATE passwords SET pass = $1 WHERE account_id = $2");
             pg_execute($conn, "change_password", array($new_hash, $_SESSION['user_id']));
             pg_prepare($conn, "delete_token", "DELETE FROM password_reset_tokens WHERE account_id = $1");
