@@ -10,7 +10,7 @@
     $action_buttons = [
         "Delete user" => "delete",
         "Reset password" => "resetpass",
-        "Reset API key" => "resetapikey"
+        "Reset API token" => "resetapikey"
     ];
     $id_separator = "_";
     if (isset($_SESSION['button_ids']) && count($_POST) === 1) {
@@ -29,18 +29,35 @@
             $refresh = fn() => header("Location: admin.php");
             switch ($id_clicked_type) {
                 case "delete": {
-                    pg_prepare($conn, "delete_user", "DELETE FROM passwords WHERE account_id = $1");
-                    pg_execute($conn, "delete_user", array($id_clicked_num));
+                    $delete = function(string $statement_name, string $table_name) use(&$conn, $id_clicked_num): void {
+                        pg_prepare($conn, $statement_name, "DELETE FROM $table_name WHERE account_id = $1");
+                        pg_execute($conn, $statement_name, array($id_clicked_num));
+                    };
+                    $delete("delete_user", "passwords");
+                    $delete("delete_user_email", "emails");
+                    $delete("delete_user_tasks", "content");
+                    $delete("delete_user_api_token", "api_keys");
+                    $delete("delete_user_pass_reset_token", "password_reset_tokens");
                     setcookie("status_cookie", "Account successfully deleted");
                     $refresh();
                     break;
                 }
                 case "resetpass": {
-                    $temp_pass = "changeme123";
+                    $characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+                    $temp_pass = "";
+                    for ($i = 0; $i < 15; $i++) {
+                        try {
+                            $rand_char_pos = random_int(0, strlen($characters) - 1);
+                            $temp_pass .= $characters[$rand_char_pos];
+                        } catch (Exception $_) {
+                            $temp_pass = "changeme123";
+                            break;
+                        }
+                    }
                     $temp_pass_hash = Util::password_hash($temp_pass);
                     pg_prepare($conn, "reset_pass", "UPDATE passwords SET pass = $1 WHERE account_id = $2");
                     pg_execute($conn, "reset_pass", array($temp_pass_hash, $id_clicked_num));
-                    setcookie("status_cookie", "Password successfully reset");
+                    setcookie("status_cookie", "Password successfully reset. Temp password: $temp_pass");
                     $refresh();
                     break;
                 }
@@ -82,7 +99,13 @@
             <h2>Users</h2>
             <table class="center">
                 <?php
-                    $user_table_titles = ["Account ID", "Username", "Actions"];
+                    $user_table_titles = [
+                        "Account ID",
+                        "Username",
+                        "Email",
+                        "API token",
+                        "Actions"
+                    ];
                     echo "<thead><tr>";
                     foreach ($user_table_titles as $title) {
                         echo "<th>$title</th>";
@@ -90,13 +113,15 @@
                     echo "</tr></thead>";
 
                     $rows = pg_fetch_all(Util::query("
-                        SELECT passwords.account_id, username FROM passwords
+                        SELECT passwords.account_id, username, email, token FROM passwords
+                        LEFT JOIN emails ON passwords.account_id = emails.account_id
+                        LEFT JOIN api_keys ON passwords.account_id = api_keys.account_id
                         ORDER BY account_id ASC
                     "));
                     foreach ($rows as $i => $row) {
                         echo "<tr>";
                         foreach ($row as $e) {
-                            echo $e !== null ? "<th>$e</th>" : "<th>null</th>";
+                            echo $e !== null ? "<th>$e</th>" : "<th></th>";
                         }
                         $db_account_id = (int) $row["account_id"];
                         if (!in_array($db_account_id, ADMIN_ACCOUNT_IDS, true)) {
