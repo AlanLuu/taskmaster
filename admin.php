@@ -4,7 +4,7 @@
 
     session_start();
     if (!isset($_SESSION['account_id']) || !in_array(($admin_account_id = (int) $_SESSION['account_id']), ADMIN_ACCOUNT_IDS, true)) {
-        Util::respond_http_and_die(403, "Unauthorized");
+        Util::respond_http_and_die(403, "Forbidden");
     }
 
     $action_buttons = [
