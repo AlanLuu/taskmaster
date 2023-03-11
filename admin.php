@@ -3,24 +3,13 @@
     require_once "util.php";
 
     session_start();
-    if (!isset($_SESSION['account_id']) || !in_array(($admin_account_id = (int) $_SESSION['account_id']), ADMIN_ACCOUNT_IDS, true)) {
+    if (!isset($_SESSION['account_id']) || !in_array((int) $_SESSION['account_id'], ADMIN_ACCOUNT_IDS, true)) {
         Util::respond_http_and_die(403, "Forbidden");
     }
 
-    $action_buttons = [
-        "Delete user" => "delete",
-        "Reset password" => "resetpass",
-        "Reset API token" => "resetapikey"
-    ];
     $id_separator = "_";
-    if (isset($_SESSION['button_ids']) && count($_POST) === 1) {
-        $id_clicked = "";
-        foreach ($_SESSION['button_ids'] as $button_id) {
-            if (isset($_POST[$button_id])) {
-                $id_clicked = $button_id;
-                break;
-            }
-        }
+    if (count($_POST) === 1) {
+        [$id_clicked] = array_keys($_POST);
         $id_clicked_arr = explode($id_separator, $id_clicked);
         if ($id_clicked_arr) {
             [$id_clicked_type, $id_clicked_num] = $id_clicked_arr;
@@ -29,15 +18,17 @@
             $refresh = fn() => header("Location: admin.php");
             switch ($id_clicked_type) {
                 case "delete": {
-                    $delete = function(string $statement_name, string $table_name) use(&$conn, $id_clicked_num): void {
+                    $delete_info = [
+                        "delete_user" => "passwords",
+                        "delete_user_email" => "emails",
+                        "delete_user_tasks" => "content",
+                        "delete_user_api_token" => "api_tokens",
+                        "delete_user_pass_reset_token" => "password_reset_tokens"
+                    ];
+                    foreach ($delete_info as $statement_name => $table_name) {
                         pg_prepare($conn, $statement_name, "DELETE FROM $table_name WHERE account_id = $1");
                         pg_execute($conn, $statement_name, array($id_clicked_num));
-                    };
-                    $delete("delete_user", "passwords");
-                    $delete("delete_user_email", "emails");
-                    $delete("delete_user_tasks", "content");
-                    $delete("delete_user_api_token", "api_tokens");
-                    $delete("delete_user_pass_reset_token", "password_reset_tokens");
+                    }
                     setcookie("status_cookie", "Account successfully deleted");
                     $refresh();
                     break;
@@ -73,7 +64,6 @@
         }
     }
 
-    $_SESSION['button_ids'] = [];
     $session_user = $_SESSION['username'];
 ?>
 <!DOCTYPE html>
@@ -106,6 +96,12 @@
                         "API token",
                         "Actions"
                     ];
+                    $action_buttons = [
+                        "Delete user" => "delete",
+                        "Reset password" => "resetpass",
+                        "Reset API token" => "resetapikey"
+                    ];
+
                     echo "<thead><tr>";
                     foreach ($user_table_titles as $title) {
                         echo "<th>$title</th>";
@@ -118,10 +114,14 @@
                         LEFT JOIN api_tokens ON passwords.account_id = api_tokens.account_id
                         ORDER BY account_id ASC
                     "));
-                    foreach ($rows as $i => $row) {
+                    foreach ($rows as $row) {
                         echo "<tr>";
-                        foreach ($row as $e) {
-                            echo $e !== null ? "<th>$e</th>" : "<th></th>";
+                        foreach ($row as $content) {
+                            echo "<th>";
+                            if ($content !== null) {
+                                echo $content;
+                            }
+                            echo "</th>";
                         }
                         $db_account_id = (int) $row["account_id"];
                         if (!in_array($db_account_id, ADMIN_ACCOUNT_IDS, true)) {
@@ -130,7 +130,6 @@
                             foreach ($action_buttons as $button_name => $button_id) {
                                 $button_id = ($button_id . $id_separator . $db_account_id);
                                 echo "<input type='submit' name='$button_id' class='button' value='$button_name'>";
-                                $_SESSION['button_ids'][] = $button_id;
                             }
                             echo "</form>";
                             echo "</th>";
