@@ -150,7 +150,7 @@
     if (isset($_POST['new_token'])) {
         $new_token = Util::rand_token(15);
         $conn = Util::get_conn();
-        pg_prepare($conn, "new_token", "UPDATE api_keys SET token = $1 WHERE account_id = $2");
+        pg_prepare($conn, "new_token", "UPDATE api_tokens SET token = $1 WHERE account_id = $2");
         pg_execute($conn, "new_token", array($new_token, $account_id));
         $_SESSION['api_token'] = $new_token;
         $refresh();

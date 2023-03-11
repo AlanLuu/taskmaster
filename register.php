@@ -128,7 +128,7 @@
             }
 
             $api_token = Util::rand_token(15);
-            pg_prepare($conn, "api_token", "INSERT INTO api_keys(account_id, token) VALUES($1, $2)");
+            pg_prepare($conn, "api_token", "INSERT INTO api_tokens(account_id, token) VALUES($1, $2)");
             pg_execute($conn, "api_token", array($id, $api_token));
         } else {
             Util::notify_user_and_die("Username is already taken. Please choose another username.");

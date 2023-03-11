@@ -68,7 +68,7 @@
         pg_prepare($conn, "pass", 
             "SELECT passwords.account_id, pass, email, token FROM passwords
             LEFT JOIN emails ON passwords.account_id = emails.account_id
-            LEFT JOIN api_keys ON passwords.account_id = api_keys.account_id
+            LEFT JOIN api_tokens ON passwords.account_id = api_tokens.account_id
             WHERE username = $1"
         );
         $result = pg_execute($conn, "pass", array($tmp_login_user_db));

@@ -36,7 +36,7 @@
                     $delete("delete_user", "passwords");
                     $delete("delete_user_email", "emails");
                     $delete("delete_user_tasks", "content");
-                    $delete("delete_user_api_token", "api_keys");
+                    $delete("delete_user_api_token", "api_tokens");
                     $delete("delete_user_pass_reset_token", "password_reset_tokens");
                     setcookie("status_cookie", "Account successfully deleted");
                     $refresh();
@@ -63,7 +63,7 @@
                 }
                 case "resetapikey": {
                     $new_token = Util::rand_token(15);
-                    pg_prepare($conn, "new_token", "UPDATE api_keys SET token = $1 WHERE account_id = $2");
+                    pg_prepare($conn, "new_token", "UPDATE api_tokens SET token = $1 WHERE account_id = $2");
                     pg_execute($conn, "new_token", array($new_token, $id_clicked_num));
                     setcookie("status_cookie", "API token successfully reset");
                     $refresh();
@@ -115,7 +115,7 @@
                     $rows = pg_fetch_all(Util::query("
                         SELECT passwords.account_id, username, email, token FROM passwords
                         LEFT JOIN emails ON passwords.account_id = emails.account_id
-                        LEFT JOIN api_keys ON passwords.account_id = api_keys.account_id
+                        LEFT JOIN api_tokens ON passwords.account_id = api_tokens.account_id
                         ORDER BY account_id ASC
                     "));
                     foreach ($rows as $i => $row) {

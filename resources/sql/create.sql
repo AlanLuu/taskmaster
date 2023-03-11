@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens(
     token CHAR(30) NOT NULL UNIQUE,
     expiry TIMESTAMP NOT NULL
 );
-CREATE TABLE IF NOT EXISTS api_keys(
+CREATE TABLE IF NOT EXISTS api_tokens(
     account_id INTEGER PRIMARY KEY,
     token CHAR(30) NOT NULL UNIQUE
 );

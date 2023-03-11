@@ -28,7 +28,7 @@
     //If an account is already logged in, get the account id from $_SESSION
     if (isset($_GET['token']) && $token === $_GET['token']) {
         $conn = Util::get_conn();
-        pg_prepare($conn, "verify_token", "SELECT account_id FROM api_keys WHERE token = $1");
+        pg_prepare($conn, "verify_token", "SELECT account_id FROM api_tokens WHERE token = $1");
         $result = pg_fetch_row(pg_execute($conn, "verify_token", array($token)));
         if (!$result) {
             $api_error(401, "Missing or incorrect token");
