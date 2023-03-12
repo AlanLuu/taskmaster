@@ -8,6 +8,7 @@
     </head>
     <body>
         <h1>PRIVACY POLICY</h1>
+        <h3>(Last revised March 2023)</h3>
         <hr>
         <h2>Information collected for all visitors:</h2>
         <ul>
@@ -57,7 +58,7 @@
             </li>
             <li>
                 Any User-Generated Content uploaded to this website will not be analyzed
-                except when required by law.
+                except for administrative purposes or when required by law.
             </li>
             <li>
                 Great effort is taken to secure any information that is collected.
@@ -71,7 +72,17 @@
         <h2>Usage of Google APIs</h2>
         <p>
             This website uses several Google APIs such as Google Fonts and reCAPTCHA.
-            <a href="https://policies.google.com/privacy" target="_blank"> Review Google's privacy policy</a>.
+            <a href="https://policies.google.com/privacy" target="_blank">
+                Review Google's privacy policy
+            </a>.
+        </p>
+        <hr>
+        <h2>Changes to this policy</h2>
+        <p>
+            This privacy policy is subject to change at any time without notice,
+            and your continued usage of this website is deemed an acceptance of
+            those changes. The latest version of this privacy policy will always
+            be reflected on this page.
         </p> <br>
     </body>
 </html>
