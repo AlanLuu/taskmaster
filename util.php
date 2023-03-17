@@ -28,11 +28,11 @@
     define("PACIFIC", new DateTimeZone("America/Los_Angeles"));
 
     //Database credentials
-    define("DB_HOST", getenv("DB_HOST"));
-    define("DB_PORT", getenv("DB_PORT"));
-    define("DB_NAME", getenv("DB_NAME"));
-    define("DB_USERNAME", getenv("DB_USERNAME"));
-    define("DB_PASSWORD", getenv("DB_PASSWORD"));
+    define("DB_HOST", getenv("TASK_APP_DB_HOST"));
+    define("DB_PORT", getenv("TASK_APP_DB_PORT"));
+    define("DB_NAME", getenv("TASK_APP_DB_NAME"));
+    define("DB_USERNAME", getenv("TASK_APP_DB_USERNAME"));
+    define("DB_PASSWORD", getenv("TASK_APP_DB_PASSWORD"));
 
     define("CAPTCHA_SECRET_TOKEN", getenv("CAPTCHA_SECRET_TOKEN"));
 
