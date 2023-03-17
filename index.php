@@ -273,7 +273,7 @@
                 if (count($tasks) > 0) {
                     pg_prepare($conn, "insertMultiple",
                         "INSERT INTO content(task, task_status, account_id, username) VALUES"
-                        . Util::build_insert_params(count($tasks), 3));
+                        . Util::build_insert_params(count($tasks), 4));
                     pg_execute($conn, "insertMultiple", array_merge(...$tasks));
                 }
 

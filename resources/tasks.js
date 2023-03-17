@@ -365,13 +365,14 @@ textForm.addEventListener("submit", async e => {
             "task_status": dropdownValue
         });
 
-        const tasks = await fetchTasksFromAPI();
-        if (!tasks) {
+        const apiTasks = await fetchTasksFromAPI();
+        if (!apiTasks) {
             handleJSError(1);
             return;
         }
         
-        const {task_id: taskID, task_name: taskName} = tasks[tasks.length - 1];
+        const {task_id: taskID} = apiTasks[apiTasks.length - 1];
+        const taskName = taskDiv.taskName;
         const taskObj = {taskName: taskName, taskDiv: taskDiv};
         const newIDArr = [
             renameID(deleteButtonID, taskID),
@@ -480,7 +481,8 @@ fileForm.addEventListener("submit", async e => {
             inProgressButtonID 
         } of taskDivs) {
             const buttons = getButtonsOnly(taskDiv);
-            const {task_id: taskID, task_name: taskName} = tasks[tasks.length - 1];
+            const {task_id: taskID} = apiTasks[apiTasks.length - 1];
+            const taskName = taskDiv.taskName;
             const taskObj = {taskName: taskName, taskDiv: taskDiv};
             const newIDArr = [
                 renameID(deleteButtonID, taskID),
