@@ -34,7 +34,7 @@
     define("DB_USERNAME", getenv("TASK_APP_DB_USERNAME"));
     define("DB_PASSWORD", getenv("TASK_APP_DB_PASSWORD"));
 
-    define("CAPTCHA_SECRET_TOKEN", getenv("CAPTCHA_SECRET_TOKEN"));
+    define("CAPTCHA_SECRET_TOKEN", getenv("TASK_APP_CAPTCHA_SECRET_TOKEN"));
 
     /**
      * Util class with helper functions
