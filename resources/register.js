@@ -20,21 +20,19 @@ function formInputsValid(form) {
     return usernameError.length === 0 && passError.length === 0 && confirmPass && emailError.length === 0;
 }
 
-if (CAPTCHA_ENABLED) {
-    const [form] = document.getElementsByTagName("form");
-    form.addEventListener("submit", e => {
-        e.preventDefault();
-        const infoTextCaptcha = document.getElementById("infotextcaptcha");
-        const validForm = formInputsValid(form);
-        const validCaptcha = verifyCaptcha();
-        if (validForm && validCaptcha) {
-            infoTextCaptcha.textContent = "";
-            form.submit();
-        } else if (!validCaptcha) {
-            infoTextCaptcha.textContent = "Captcha verification failed";
-        }
-    });
-}
+const [form] = document.getElementsByTagName("form");
+form.addEventListener("submit", e => {
+    e.preventDefault();
+    const infoTextCaptcha = document.getElementById("infotextcaptcha");
+    const validForm = formInputsValid(form);
+    const validCaptcha = CAPTCHA_ENABLED ? verifyCaptcha() : true;
+    if (validForm && validCaptcha) {
+        if (infoTextCaptcha) infoTextCaptcha.textContent = "";
+        form.submit();
+    } else if (!validCaptcha && infoTextCaptcha) {
+        infoTextCaptcha.textContent = "Captcha verification failed";
+    }
+});
 
 /*
     Prevents the same entry from being inserted multiple times

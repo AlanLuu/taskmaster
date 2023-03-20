@@ -14,19 +14,17 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script type="module">
             import { CAPTCHA_ENABLED, verifyCaptcha } from "./resources/util.js";
-            if (CAPTCHA_ENABLED) {
-                const [form] = document.getElementsByTagName("form");
-                form.addEventListener("submit", e => {
-                    e.preventDefault();
-                    const infoMsg = document.getElementById("infomsg");
-                    if (verifyCaptcha()) {
-                        infoMsg.textContent = "";
-                        form.submit();
-                    } else {
-                        infoMsg.textContent = "Captcha verification failed";
-                    }
-                });
-            }
+            const [form] = document.getElementsByTagName("form");
+            form.addEventListener("submit", e => {
+                e.preventDefault();
+                const infoMsg = document.getElementById("infomsg");
+                if (CAPTCHA_ENABLED ? verifyCaptcha() : true) {
+                    infoMsg.textContent = "";
+                    form.submit();
+                } else if (CAPTCHA_ENABLED) {
+                    infoMsg.textContent = "Captcha verification failed";
+                }
+            });
         </script>
     </head>
     <body>

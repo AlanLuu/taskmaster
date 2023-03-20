@@ -36,6 +36,8 @@
 
     define("CAPTCHA_SECRET_TOKEN", getenv("TASK_APP_CAPTCHA_SECRET_TOKEN"));
 
+    setcookie("captcha_enabled", CAPTCHA_ENABLED ? "1" : "0");
+
     /**
      * Util class with helper functions
      */
