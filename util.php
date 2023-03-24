@@ -20,7 +20,6 @@
     //Some useful constants
     const ADMIN_ACCOUNT_IDS = [1];
     const BCRYPT_COST = 12;
-    const CAPTCHA_ENABLED = true;
     const GET = "GET";
     const GLOBAL_LOGGING_ENABLED = false;
     const POST = "POST";
@@ -33,10 +32,30 @@
     define("DB_NAME", getenv("TASK_APP_DB_NAME"));
     define("DB_USERNAME", getenv("TASK_APP_DB_USERNAME"));
     define("DB_PASSWORD", getenv("TASK_APP_DB_PASSWORD"));
+    if (!DB_HOST || !DB_NAME || !DB_USERNAME || !DB_PASSWORD) {
+        $env_error_msg = "";
+        if (!DB_HOST) {
+            $env_error_msg .= "DB_HOST not set" . "<br>";
+        }
+        if (!DB_NAME) {
+            $env_error_msg .= "DB_NAME not set" . "<br>";
+        }
+        if (!DB_USERNAME) {
+            $env_error_msg .= "DB_USERNAME not set" . "<br>";
+        }
+        if (!DB_PASSWORD) {
+            $env_error_msg .= "DB_PASSWORD not set" . "<br>";
+        }
+        die($env_error_msg);
+    }
 
+    /*
+     * Technically optional; if TASK_APP_CAPTCHA_SECRET_TOKEN is unset then CAPTCHA
+     * functionality will simply be disabled without affecting any other important
+     * website functionality.
+     */
     define("CAPTCHA_SECRET_TOKEN", getenv("TASK_APP_CAPTCHA_SECRET_TOKEN"));
-
-    setcookie("captcha_enabled", CAPTCHA_ENABLED ? "1" : "0");
+    setcookie("captcha_enabled", CAPTCHA_SECRET_TOKEN ? "1" : "0");
 
     /**
      * Util class with helper functions
@@ -90,7 +109,7 @@
          * on the page where this function was called, false otherwise.
          */
         public static function verify_captcha(): bool {
-            if (!CAPTCHA_ENABLED) {
+            if (!CAPTCHA_SECRET_TOKEN) {
                 return true;
             }
             $user_token = $_POST['g-recaptcha-response'] ?? null;

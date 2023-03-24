@@ -38,7 +38,7 @@
                 <input class="input" id="signupemail" type="text" name="signupemail">
                 <span class="infotext" id="infotextemail"></span>
             </div>
-<?php if (CAPTCHA_ENABLED): ?>
+<?php if (CAPTCHA_SECRET_TOKEN): ?>
             <div class="inputgroup">
                 <div class="g-recaptcha" data-sitekey="6LfHaackAAAAADZkS6s9XBmCoaGhNEU331gxCZfC"></div>
                 <span class="infotext" id="infotextcaptcha"></span>
