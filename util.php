@@ -29,7 +29,7 @@
 
     //Database credentials
     define("DB_HOST", getenv("TASK_APP_DB_HOST"));
-    define("DB_PORT", getenv("TASK_APP_DB_PORT"));
+    define("DB_PORT", getenv("TASK_APP_DB_PORT") ?: "5432");
     define("DB_NAME", getenv("TASK_APP_DB_NAME"));
     define("DB_USERNAME", getenv("TASK_APP_DB_USERNAME"));
     define("DB_PASSWORD", getenv("TASK_APP_DB_PASSWORD"));
