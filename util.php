@@ -195,12 +195,12 @@
          * 
          * @param string $file_path the file to log to
          * @param mixed $content the content to log
-         * @param bool $bypass [optional] if true, will log the content
+         * @param bool $always_log [optional] if true, will log the content
          * without considering whether global logging is explicitly disabled
          * @return void
          */
-        public static function log(string $file_path, mixed $content, bool $bypass = false): void {
-            if (!GLOBAL_LOGGING_ENABLED && !$bypass) return;
+        public static function log(string $file_path, mixed $content, bool $always_log = false): void {
+            if (!GLOBAL_LOGGING_ENABLED && !$always_log) return;
             $date = new DateTime("now", PACIFIC);
             $now = $date->format("Y-m-d H:i:s");
             $file_path = strpos($file_path, "/") === false ? "./logs/$file_path" : $file_path;

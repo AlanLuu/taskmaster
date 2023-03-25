@@ -139,7 +139,7 @@
         //Redirects the user to the login page if not logged in yet
         switch ($_SERVER['REQUEST_METHOD']) {
             case GET:
-                Util::log("login.php.txt", "Accessed login page", true);
+                Util::log("login.php.txt", "Accessed login page");
                 header("Location: logout.php");
                 break;
             case POST:
