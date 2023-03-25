@@ -90,6 +90,10 @@ thead {
     height: 20px;
 }
 
+.mobilefriendlytable {
+    overflow-x: auto;
+}
+
 .left {
     float: left;
 }

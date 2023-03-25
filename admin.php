@@ -87,105 +87,109 @@
             <p class="infotext" id="infomsg"><?php echo Util::sanitize($_COOKIE['status_cookie'], "htmlspecialchars"); setcookie("status_cookie", ""); ?></p>
 <?php endif ?>
             <h2>Users</h2>
-            <table class="center">
-                <?php
-                    $user_table_titles = [
-                        "Account ID",
-                        "Username",
-                        "Email",
-                        "API token",
-                        "Actions"
-                    ];
-                    $action_buttons = [
-                        "Delete user" => "delete",
-                        "Reset password" => "resetpass",
-                        "Reset API token" => "resetapikey"
-                    ];
+            <div class="mobilefriendlytable">
+                <table class="center">
+                    <?php
+                        $user_table_titles = [
+                            "Account ID",
+                            "Username",
+                            "Email",
+                            "API token",
+                            "Actions"
+                        ];
+                        $action_buttons = [
+                            "Delete user" => "delete",
+                            "Reset password" => "resetpass",
+                            "Reset API token" => "resetapikey"
+                        ];
 
-                    echo "<thead><tr>";
-                    foreach ($user_table_titles as $title) {
-                        echo "<th>$title</th>";
-                    }
-                    echo "</tr></thead>";
-
-                    $rows = pg_fetch_all(Util::query("
-                        SELECT passwords.account_id, username, email, token FROM passwords
-                        LEFT JOIN emails ON passwords.account_id = emails.account_id
-                        LEFT JOIN api_tokens ON passwords.account_id = api_tokens.account_id
-                        ORDER BY account_id ASC
-                    "));
-                    echo "<tbody>";
-                    foreach ($rows as $row) {
-                        echo "<tr>";
-                        foreach ($row as $content) {
-                            echo "<th>";
-                            if ($content !== null) {
-                                echo $content;
-                            }
-                            echo "</th>";
+                        echo "<thead><tr>";
+                        foreach ($user_table_titles as $title) {
+                            echo "<th>$title</th>";
                         }
-                        $db_account_id = (int) $row["account_id"];
-                        if (!in_array($db_account_id, ADMIN_ACCOUNT_IDS, true)) {
-                            echo "<th>";
-                            echo "<form method='post' action='admin.php' enctype='multipart/form-data'>";
-                            foreach ($action_buttons as $button_name => $button_id) {
-                                $button_id = ($button_id . $id_separator . $db_account_id);
-                                echo "<input type='submit' name='$button_id' class='button' value='$button_name'>";
-                            }
-                            echo "</form>";
-                            echo "</th>";
-                        }
-                        echo "</tr>";
-                    }
-                    echo "</tbody>";
-                ?>
+                        echo "</tr></thead>";
 
-            </table>
+                        $rows = pg_fetch_all(Util::query("
+                            SELECT passwords.account_id, username, email, token FROM passwords
+                            LEFT JOIN emails ON passwords.account_id = emails.account_id
+                            LEFT JOIN api_tokens ON passwords.account_id = api_tokens.account_id
+                            ORDER BY account_id ASC
+                        "));
+                        echo "<tbody>";
+                        foreach ($rows as $row) {
+                            echo "<tr>";
+                            foreach ($row as $content) {
+                                echo "<th>";
+                                if ($content !== null) {
+                                    echo $content;
+                                }
+                                echo "</th>";
+                            }
+                            $db_account_id = (int) $row["account_id"];
+                            if (!in_array($db_account_id, ADMIN_ACCOUNT_IDS, true)) {
+                                echo "<th>";
+                                echo "<form method='post' action='admin.php' enctype='multipart/form-data'>";
+                                foreach ($action_buttons as $button_name => $button_id) {
+                                    $button_id = ($button_id . $id_separator . $db_account_id);
+                                    echo "<input type='submit' name='$button_id' class='button' value='$button_name'>";
+                                }
+                                echo "</form>";
+                                echo "</th>";
+                            }
+                            echo "</tr>";
+                        }
+                        echo "</tbody>";
+                    ?>
+
+                </table>
+            </div>
 
             <h2>Tasks</h2>
-            <table class="center">
-                <?php
-                    $task_table_titles = [
-                        "Task ID",
-                        "Task Name",
-                        "Task Status",
-                        "Account ID",
-                        "Username"
-                    ];
+            <div class="mobilefriendlytable">
+                <table class="center">
+                    <?php
+                        $task_table_titles = [
+                            "Task ID",
+                            "Task Name",
+                            "Task Status",
+                            "Account ID",
+                            "Username"
+                        ];
 
-                    echo "<thead><tr>";
-                    foreach ($task_table_titles as $title) {
-                        echo "<th>$title</th>";
-                    }
-                    echo "</tr></thead>";
-
-                    $rows = pg_fetch_all(Util::query("
-                        SELECT task_id, task, task_status, account_id, username FROM content
-                        ORDER BY task_id ASC
-                    "));
-                    echo "<tbody>";
-                    foreach ($rows as $row) {
-                        echo "<tr>";
-                        foreach ($row as $category => $content) {
-                            if ($category === "task_status") {
-                                $content = [
-                                    "t" => "TODO",
-                                    "p" => "In progress",
-                                    "c" => "Completed"
-                                ][$content];
-                            }
-                            echo "<th>";
-                            if ($content !== null) {
-                                echo $content;
-                            }
-                            echo "</th>";
+                        echo "<thead><tr>";
+                        foreach ($task_table_titles as $title) {
+                            echo "<th>$title</th>";
                         }
-                        echo "</tr>";
-                    }
-                    echo "</tbody>";
-                ?>
+                        echo "</tr></thead>";
 
-            </table>
+                        $rows = pg_fetch_all(Util::query("
+                            SELECT task_id, task, task_status, account_id, username FROM content
+                            ORDER BY task_id ASC
+                        "));
+                        echo "<tbody>";
+                        foreach ($rows as $row) {
+                            echo "<tr>";
+                            foreach ($row as $category => $content) {
+                                if ($category === "task_status") {
+                                    $content = [
+                                        "t" => "TODO",
+                                        "p" => "In progress",
+                                        "c" => "Completed"
+                                    ][$content];
+                                }
+                                echo "<th>";
+                                if ($content !== null) {
+                                    echo $content;
+                                }
+                                echo "</th>";
+                            }
+                            echo "</tr>";
+                        }
+                        echo "</tbody>";
+                    ?>
+
+                </table>
+            </div>
         </div>
     </body>
 </html>
