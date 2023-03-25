@@ -35,16 +35,16 @@
     if (!DB_HOST || !DB_NAME || !DB_USERNAME || !DB_PASSWORD) {
         $env_error_msg = "";
         if (!DB_HOST) {
-            $env_error_msg .= "DB_HOST not set" . "<br>";
+            $env_error_msg .= "DB_HOST env var not set" . "<br>";
         }
         if (!DB_NAME) {
-            $env_error_msg .= "DB_NAME not set" . "<br>";
+            $env_error_msg .= "DB_NAME env var not set" . "<br>";
         }
         if (!DB_USERNAME) {
-            $env_error_msg .= "DB_USERNAME not set" . "<br>";
+            $env_error_msg .= "DB_USERNAME env var not set" . "<br>";
         }
         if (!DB_PASSWORD) {
-            $env_error_msg .= "DB_PASSWORD not set" . "<br>";
+            $env_error_msg .= "DB_PASSWORD env var not set" . "<br>";
         }
         die($env_error_msg);
     }
