@@ -11,7 +11,9 @@
         <title>Forgot Password? - <?= WEBSITE_NAME ?></title>
         <link href="resources/index.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<?php if (CAPTCHA_ENABLED): ?>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php endif ?>
         <script type="module">
             import { CAPTCHA_ENABLED, verifyCaptcha } from "./resources/util.js";
             const [form] = document.getElementsByTagName("form");
@@ -36,9 +38,9 @@
                 <label for="resetemail">Email associated with account:</label>
                 <input class="input" id="resetemail" type="text" name="resetemail" required>
             </div>
-<?php if (CAPTCHA_SECRET_TOKEN): ?>
+<?php if (CAPTCHA_ENABLED): ?>
             <div class="inputgroup">
-                <div class="g-recaptcha" data-sitekey="6LfHaackAAAAADZkS6s9XBmCoaGhNEU331gxCZfC"></div>
+                <div class="g-recaptcha" data-sitekey="<?= CAPTCHA_SITE_TOKEN ?>"></div>
             </div>
 <?php endif ?>
             <input class="button" type="submit" name="action" value="Submit">

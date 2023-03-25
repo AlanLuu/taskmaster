@@ -10,7 +10,9 @@
         <title>Sign Up - <?= WEBSITE_NAME ?></title>
         <link href="resources/index.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+<?php if (CAPTCHA_ENABLED): ?>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php endif ?>
         <script type="module" src="resources/register.js"></script>
     </head>
     <body>
@@ -38,9 +40,9 @@
                 <input class="input" id="signupemail" type="text" name="signupemail">
                 <span class="infotext" id="infotextemail"></span>
             </div>
-<?php if (CAPTCHA_SECRET_TOKEN): ?>
+<?php if (CAPTCHA_ENABLED): ?>
             <div class="inputgroup">
-                <div class="g-recaptcha" data-sitekey="6LfHaackAAAAADZkS6s9XBmCoaGhNEU331gxCZfC"></div>
+                <div class="g-recaptcha" data-sitekey="<?= CAPTCHA_SITE_TOKEN ?>"></div>
                 <span class="infotext" id="infotextcaptcha"></span>
             </div>
 <?php endif ?>

@@ -22,9 +22,9 @@
     const BCRYPT_COST = 12;
     const GET = "GET";
     const GLOBAL_LOGGING_ENABLED = false;
+    const PACIFIC = new DateTimeZone("America/Los_Angeles");
     const POST = "POST";
     const WEBSITE_NAME = "Task Master";
-    define("PACIFIC", new DateTimeZone("America/Los_Angeles"));
 
     //Database credentials
     define("DB_HOST", getenv("TASK_APP_DB_HOST"));
@@ -50,12 +50,14 @@
     }
 
     /*
-     * Technically optional; if TASK_APP_CAPTCHA_SECRET_TOKEN is unset then CAPTCHA
-     * functionality will simply be disabled without affecting any other important
-     * website functionality.
+     * Technically optional: if TASK_APP_CAPTCHA_SITE_TOKEN or TASK_APP_CAPTCHA_SECRET_TOKEN
+     * is unset then CAPTCHA functionality will simply be disabled without affecting any other
+     * important website functionality.
      */
-    define("CAPTCHA_SECRET_TOKEN", getenv("TASK_APP_CAPTCHA_SECRET_TOKEN"));
-    setcookie("captcha_enabled", CAPTCHA_SECRET_TOKEN ? "1" : "0");
+    define("CAPTCHA_SITE_TOKEN", getenv("TASK_APP_CAPTCHA_SITE_TOKEN") ?: "");
+    define("CAPTCHA_SECRET_TOKEN", getenv("TASK_APP_CAPTCHA_SECRET_TOKEN") ?: "");
+    const CAPTCHA_ENABLED = CAPTCHA_SITE_TOKEN && CAPTCHA_SECRET_TOKEN;
+    setcookie("captcha_enabled", CAPTCHA_ENABLED ? "1" : "0");
 
     /**
      * Util class with helper functions
@@ -109,7 +111,7 @@
          * on the page where this function was called, false otherwise.
          */
         public static function verify_captcha(): bool {
-            if (!CAPTCHA_SECRET_TOKEN) {
+            if (!CAPTCHA_ENABLED) {
                 return true;
             }
             $user_token = $_POST['g-recaptcha-response'] ?? null;
