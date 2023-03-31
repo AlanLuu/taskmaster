@@ -174,6 +174,7 @@
             _END;
             while ($row) {
                 [$task_id, $user_task, $user_task_status] = $row;
+                $user_task = addslashes($user_task);
                 switch ($user_task_status) {
                     case $todo:
                         echo "d('$user_task','$inner_todo',$task_id,0);";
@@ -249,7 +250,7 @@
 
                 //Function to strip newline characters and add to tasks array
                 $process = function(string $line) use(&$tasks, $div_to_insert_at, $session_user_id, $session_user_db): void {
-                    $line = Util::sanitize(rtrim($line), "htmlspecialchars", "addslashes");
+                    $line = rtrim($line);
                     if ($line) {
                         //Add array inside array
                         $tasks[] = [$line, $div_to_insert_at, $session_user_id, $session_user_db];
