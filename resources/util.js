@@ -23,11 +23,9 @@ export function validatePassword(password) {
         return `Password must be at least ${passwordMinChars} character${passwordMinChars !== 1 ? "s" : ""}`;
     }
 
-    //Password regex taken from here: https://stackoverflow.com/a/21456918
-    const passwordPattern = `^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{${passwordMinChars},}$`;
-    const passwordRegex = new RegExp(passwordPattern);
+    const passwordRegex = new RegExp("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()_+={}\\[\\]|\\\\;:'\",.<>\\/?`~-]*$");
     if (!passwordRegex.test(password)) {
-        return "Password must contain at least 1 letter and 1 number";
+        return "Password must contain at least 1 letter and 1 number. Only these special characters are allowed: !@#$%^&*()_+={}\\;:\",.<>?`~-";
     }
 
     return "";

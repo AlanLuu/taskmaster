@@ -449,11 +449,10 @@
             if (strlen($password) < $password_min_chars) {
                 return "Password must be at least $password_min_chars character" . ($password_min_chars !== 1 ? "s" : "") . " long";
             }
-    
-            //Password regex taken from here: https://stackoverflow.com/a/21456918
-            $password_regex = "/^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{" . $password_min_chars . ",}$/";
+
+            $password_regex = "/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#\$%^&*()_+={}\[\]|\\\\;:'\",.<>\/?`~-]*\$/";
             if (!preg_match($password_regex, $password)) {
-                return "Password must contain at least 1 letter and 1 number";
+                return "Password must contain at least 1 letter and 1 number. Only these special characters are allowed: !@#\$%^&*()_+={}\;:\",.<>?`~-";
             }
     
             return "";
