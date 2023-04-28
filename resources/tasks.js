@@ -305,7 +305,7 @@ export function displayTask(task, div, task_id, needsToLoad) {
     if (needsToLoad) {
         loadingGIF = document.createElement("img");
         loadingGIF.src = "./resources/loading.gif";
-        loadingGIF.className = "loadinggif";
+        loadingGIF.className = "loading_gif";
         loadingGIF.style.marginLeft = "5px";
         outerDiv.appendChild(loadingGIF);
     }

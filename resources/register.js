@@ -1,4 +1,4 @@
-import { CAPTCHA_ENABLED, validate, verifyCaptcha } from "./util.js";
+import { CAPTCHA_ENABLED, showSubmitLoadingIcon, validate, verifyCaptcha } from "./util.js";
 
 function formInputsValid(form) {
     const username = form['signupuser'].value.trim().replace(/[^A-Za-z0-9]/g, "");
@@ -28,6 +28,7 @@ form.addEventListener("submit", e => {
     const validCaptcha = CAPTCHA_ENABLED ? verifyCaptcha() : true;
     if (validForm && validCaptcha) {
         if (infoTextCaptcha) infoTextCaptcha.textContent = "";
+        showSubmitLoadingIcon();
         form.submit();
     } else if (!validCaptcha && infoTextCaptcha) {
         infoTextCaptcha.textContent = "Captcha verification failed";

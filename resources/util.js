@@ -37,6 +37,28 @@ export function validateEmail(email) {
     }
     return "";
 }
+
+export const isMobile = Object.freeze({
+    android: function() {
+        return navigator.userAgent.match(/(?=.*Android)(?=.*Mobile)/i) !== null;
+    },
+    blackberry: function() {
+        return navigator.userAgent.match(/BlackBerry/i) !== null;
+    },
+    ios: function() {
+        return navigator.userAgent.match(/iPhone|iPod/i) !== null;
+    },
+    opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i) !== null;
+    },
+    windows: function() {
+        return navigator.userAgent.match(/IEMobile/i) !== null || navigator.userAgent.match(/WPDesktop/i) !== null;
+    },
+    any: function() {
+        return isMobile.android() || isMobile.blackberry() || isMobile.ios() || isMobile.opera() || isMobile.windows();
+    }
+});
+
 export const validate = Object.freeze({
     username: validateUsername,
     password: validatePassword,
@@ -63,6 +85,15 @@ export function sendRequest(url, param) {
         },
         body: paramStr
     } : null);
+}
+
+export function showSubmitLoadingIcon() {
+    const [submitButton] = document.getElementsByClassName("button");
+    submitButton.disabled = true;
+    if (!isMobile.any()) {
+        const [loadingGIF] = document.getElementsByClassName("loading_gif");
+        loadingGIF.classList.remove("hidden");
+    }
 }
 
 export function verifyCaptcha() {

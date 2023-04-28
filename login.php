@@ -11,6 +11,13 @@
         <link href="resources/index.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+        <script type="module">
+            import { showSubmitLoadingIcon } from "./resources/util.js";
+            const [form] = document.getElementsByTagName("form");
+            form.addEventListener("submit", _ => {
+                showSubmitLoadingIcon();
+            });
+        </script>
     </head>
     <body>
         <div style="float: right;">
@@ -18,6 +25,7 @@
                 <input class="input" type="text" placeholder="Username" name="loginuser" required>
                 <input class="input" type="password" placeholder="Password" name="loginpass" required>
                 <input class="button" type="submit" value="Log In">
+                <img src="resources/loading.gif" class="loading_gif hidden">
             </form>
             <div class="center">
                 <p class="infotext">
@@ -65,7 +73,7 @@
             die();
         };
         
-        pg_prepare($conn, "pass", 
+        pg_prepare($conn, "pass",
             "SELECT passwords.account_id, pass, email, token FROM passwords
             LEFT JOIN emails ON passwords.account_id = emails.account_id
             LEFT JOIN api_tokens ON passwords.account_id = api_tokens.account_id

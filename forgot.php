@@ -15,13 +15,14 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?php endif ?>
         <script type="module">
-            import { CAPTCHA_ENABLED, verifyCaptcha } from "./resources/util.js";
+            import { CAPTCHA_ENABLED, showSubmitLoadingIcon, verifyCaptcha } from "./resources/util.js";
             const [form] = document.getElementsByTagName("form");
             form.addEventListener("submit", e => {
                 e.preventDefault();
                 const infoMsg = document.getElementById("infomsg");
                 if (CAPTCHA_ENABLED ? verifyCaptcha() : true) {
                     infoMsg.textContent = "";
+                    showSubmitLoadingIcon();
                     form.submit();
                 } else if (CAPTCHA_ENABLED) {
                     infoMsg.textContent = "Captcha verification failed";
@@ -44,6 +45,7 @@
             </div>
 <?php endif ?>
             <input class="button" type="submit" name="action" value="Submit">
+            <img src="resources/loading.gif" class="loading_gif hidden">
         </form>
         <p class="infotext" id="infomsg">
 <?php
@@ -69,7 +71,7 @@
         setcookie("resetuser", "");
         setcookie("resetemail", "");
         
-        pg_prepare($conn, "email", 
+        pg_prepare($conn, "email",
             "SELECT email, passwords.account_id FROM passwords
             INNER JOIN emails ON passwords.account_id = emails.account_id
             WHERE passwords.username = $1"
