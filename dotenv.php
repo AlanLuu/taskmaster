@@ -34,7 +34,7 @@
             }
         }
 
-        public function delete(string $key): bool {
+        public function delete(string $key): void {
             if ($this->using_dot_env) {
                 unset($this->env_vars[$key]);
                 if ($this->modify_env_file) {
@@ -49,10 +49,8 @@
                     }
                     fclose($fp);
                 }
-                return true;
-            } else {
-                return putenv($key);
             }
+            putenv($key);
         }
 
         public function get(string $key): mixed {
@@ -88,7 +86,7 @@
             return true;
         }
 
-        public function set(string $key, mixed $value): bool {
+        public function set(string $key, mixed $value): void {
             if ($this->using_dot_env) {
                 $this->env_vars[$key] = $value;
                 if ($this->modify_env_file) {
@@ -96,10 +94,8 @@
                     fwrite($fp, $this->to_env_format());
                     fclose($fp);
                 }
-                return true;
-            } else {
-                return putenv("$key=$value");
             }
+            putenv("$key=$value");
         }
 
         public function set_modify_env_file(bool $modify_env_file): void {
