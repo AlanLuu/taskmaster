@@ -1,5 +1,6 @@
 <?php
     declare(strict_types = 1);
+    require_once "dotenv.php";
     
     /**
      * https://www.php.net/manual/en/function.ob-start.php
@@ -20,6 +21,7 @@
     //Some useful constants
     const ADMIN_ACCOUNT_IDS = [1];
     const BCRYPT_COST = 12;
+    const ENV = new DotEnv();
     const GET = "GET";
     const GLOBAL_LOGGING_ENABLED = false;
     const PACIFIC = new DateTimeZone("America/Los_Angeles");
@@ -27,11 +29,11 @@
     const WEBSITE_NAME = "Task Master";
 
     //Database credentials
-    define("DB_HOST", getenv("TASK_APP_DB_HOST"));
-    define("DB_PORT", getenv("TASK_APP_DB_PORT") ?: "5432");
-    define("DB_NAME", getenv("TASK_APP_DB_NAME"));
-    define("DB_USERNAME", getenv("TASK_APP_DB_USERNAME"));
-    define("DB_PASSWORD", getenv("TASK_APP_DB_PASSWORD"));
+    define("DB_HOST", ENV->get("TASK_APP_DB_HOST"));
+    define("DB_PORT", ENV->get("TASK_APP_DB_PORT") ?: "5432");
+    define("DB_NAME", ENV->get("TASK_APP_DB_NAME"));
+    define("DB_USERNAME", ENV->get("TASK_APP_DB_USERNAME"));
+    define("DB_PASSWORD", ENV->get("TASK_APP_DB_PASSWORD"));
     if (!DB_HOST || !DB_NAME || !DB_USERNAME || !DB_PASSWORD) {
         $env_error_msg = "";
         if (!DB_HOST) {
@@ -54,8 +56,8 @@
      * is unset then CAPTCHA functionality will simply be disabled without affecting any other
      * important website functionality.
      */
-    define("CAPTCHA_SITE_TOKEN", getenv("TASK_APP_CAPTCHA_SITE_TOKEN") ?: "");
-    define("CAPTCHA_SECRET_TOKEN", getenv("TASK_APP_CAPTCHA_SECRET_TOKEN") ?: "");
+    define("CAPTCHA_SITE_TOKEN", ENV->get("TASK_APP_CAPTCHA_SITE_TOKEN") ?: "");
+    define("CAPTCHA_SECRET_TOKEN", ENV->get("TASK_APP_CAPTCHA_SECRET_TOKEN") ?: "");
     const CAPTCHA_ENABLED = CAPTCHA_SITE_TOKEN && CAPTCHA_SECRET_TOKEN;
     setcookie("captcha_enabled", CAPTCHA_ENABLED ? "1" : "0");
 
