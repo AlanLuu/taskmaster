@@ -8,11 +8,14 @@
     class DotEnv {
         private string $env_file_name;
         private array $env_vars;
+        private bool $modify_env_file;
         private bool $using_dot_env;
         private static string $env_var_separator = "=";
 
         public function __construct(bool $using_dot_env = true, string $env_file_name = ".env") {
             $this->env_vars = [];
+            $this->modify_env_file = false;
+            $this->using_dot_env = $using_dot_env;
             if ($using_dot_env) {
                 $this->env_file_name = $env_file_name;
                 $env_lines = @file($env_file_name, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -29,22 +32,23 @@
             } else {
                 $this->env_file_name = "";
             }
-            $this->using_dot_env = $using_dot_env;
         }
 
         public function delete(string $key): bool {
             if ($this->using_dot_env) {
                 unset($this->env_vars[$key]);
-                $env_lines = file($this->env_file_name, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                $fp = fopen($this->env_file_name, "w");
-                foreach ($env_lines as $line) {
-                    $equal_sign_pos = strpos($line, self::$env_var_separator);
-                    $line_key = rtrim(substr($line, 0, $equal_sign_pos));
-                    if ($key !== $line_key) {
-                        fwrite($fp, "$line\n");
+                if ($this->modify_env_file) {
+                    $env_lines = file($this->env_file_name, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                    $fp = fopen($this->env_file_name, "w");
+                    foreach ($env_lines as $line) {
+                        $equal_sign_pos = strpos($line, self::$env_var_separator);
+                        $line_key = rtrim(substr($line, 0, $equal_sign_pos));
+                        if ($key !== $line_key) {
+                            fwrite($fp, "$line\n");
+                        }
                     }
+                    fclose($fp);
                 }
-                fclose($fp);
                 return true;
             } else {
                 return putenv($key);
@@ -55,6 +59,10 @@
             return $this->using_dot_env
                 ? ($this->env_vars[$key] ?? null)
                 : (getenv($key) ?? null);
+        }
+
+        public function get_modify_env_file(): bool {
+            return $this->modify_env_file;
         }
 
         public function get_keys_by_value(mixed $value): array {
@@ -83,13 +91,19 @@
         public function set(string $key, mixed $value): bool {
             if ($this->using_dot_env) {
                 $this->env_vars[$key] = $value;
-                $fp = fopen($this->env_file_name, "w");
-                fwrite($fp, $this->to_env_format());
-                fclose($fp);
+                if ($this->modify_env_file) {
+                    $fp = fopen($this->env_file_name, "w");
+                    fwrite($fp, $this->to_env_format());
+                    fclose($fp);
+                }
                 return true;
             } else {
                 return putenv("$key=$value");
             }
+        }
+
+        public function set_modify_env_file(bool $modify_env_file): void {
+            $this->modify_env_file = $modify_env_file;
         }
 
         private function to_env_format(): string {
