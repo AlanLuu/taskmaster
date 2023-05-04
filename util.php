@@ -1,5 +1,9 @@
 <?php
     declare(strict_types = 1);
+    if (count(get_included_files()) === 1) {
+        header("HTTP/1.1 404 Not Found");
+        die();
+    }
     require_once "dotenv.php";
     
     /**
