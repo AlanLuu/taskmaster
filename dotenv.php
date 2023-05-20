@@ -59,8 +59,8 @@
                 : (getenv($key) ?? null);
         }
 
-        public function get_modify_env_file(): bool {
-            return $this->modify_env_file;
+        public function get_env_file_name(): string {
+            return $this->env_file_name;
         }
 
         public function get_keys_by_value(mixed $value): array {
@@ -75,6 +75,14 @@
 
         public function indexOf(string $key): int {
             return array_search($key, array_keys($this->env_vars)) ?: -1;
+        }
+
+        public function is_modifying_env_file(): bool {
+            return $this->modify_env_file;
+        }
+
+        public function is_using_dot_env(): bool {
+            return $this->using_dot_env;
         }
 
         public function put_envs(): bool {
@@ -100,6 +108,10 @@
 
         public function set_modify_env_file(bool $modify_env_file): void {
             $this->modify_env_file = $modify_env_file;
+        }
+
+        public function set_using_dot_env(bool $using_dot_env): void {
+            $this->using_dot_env = $using_dot_env;
         }
 
         private function to_env_format(): string {
