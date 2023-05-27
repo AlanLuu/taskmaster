@@ -19,19 +19,27 @@
             if ($using_dot_env) {
                 $this->env_file_name = $env_file_name;
                 $env_lines = @file($env_file_name, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                if (!$env_lines) {
-                    $class_name = get_class();
-                    die("$class_name: cannot open file \"$env_file_name\" or it doesn't exist");
+
+                //Only throw this exception if $env_file_name doesn't actually exist
+                if ($env_lines === false) {
+                    throw new DotEnvException("Cannot open file \"$env_file_name\" or it doesn't exist");
                 }
+
                 foreach ($env_lines as $line) {
                     $equal_sign_pos = strpos($line, self::$env_var_separator);
-                    $key = rtrim(substr($line, 0, $equal_sign_pos));
-                    $value = ltrim(substr($line, $equal_sign_pos + 1));
-                    $this->env_vars[$key] = $value;
+                    $key = trim(substr($line, 0, $equal_sign_pos));
+                    if ($key[0] !== "#") { //Treat lines beginning with "#" as comments
+                        $value = trim(substr($line, $equal_sign_pos + 1));
+                        $this->env_vars[$key] = $value;
+                    }
                 }
             } else {
                 $this->env_file_name = "";
             }
+        }
+
+        public function contains(string $key): bool {
+            return $this->indexOf($key) >= 0;
         }
 
         public function delete(string $key): void {
@@ -85,6 +93,10 @@
             return $this->using_dot_env;
         }
 
+        public function num_vars(): int {
+            return count($this->using_dot_env ? $this->env_vars : $_ENV);
+        }
+
         public function put_envs(): bool {
             foreach ($this->env_vars as $key => $value) {
                 if (!putenv("$key=$value")) {
@@ -126,3 +138,5 @@
             return var_export($this, true);
         }
     }
+
+    final class DotEnvException extends Exception {}
