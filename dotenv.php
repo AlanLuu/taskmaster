@@ -31,6 +31,7 @@
                     if ($key[0] !== "#") { //Treat lines beginning with "#" as comments
                         $value = trim(substr($line, $equal_sign_pos + 1));
                         $this->env_vars[$key] = $value;
+                        putenv("$key=$value");
                     }
                 }
             } else {
@@ -95,15 +96,6 @@
 
         public function num_vars(): int {
             return count($this->using_dot_env ? $this->env_vars : $_ENV);
-        }
-
-        public function put_envs(): bool {
-            foreach ($this->env_vars as $key => $value) {
-                if (!putenv("$key=$value")) {
-                    return false;
-                }
-            }
-            return true;
         }
 
         public function set(string $key, mixed $value): void {
