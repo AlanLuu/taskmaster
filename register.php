@@ -49,7 +49,7 @@
             <input class="button" type="submit" name="action" value="Sign Up">
             <img src="resources/loading.gif" class="loading_gif hidden">
         </form>
-        <p><strong>By signing up, you agree to the following <a href="privacy.php">privacy policy</a>.</strong></p>
+        <p><strong>By signing up, you agree to the following <a href="privacy.html">privacy policy</a>.</strong></p>
         <p>Already have an account? <a href="login.php">Log In</a></p>
 <?php
     //This code handles the users signing up on the website
