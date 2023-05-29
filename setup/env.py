@@ -14,16 +14,12 @@ def create_tables(env_vars, db_var_keys):
         raise_exit("ERROR: Could not import psycopg2, perhaps it's not installed?")
     
     host, db_name, username, password = db_var_keys
-    try:
-        conn = psycopg2.connect(
-            host=env_vars[host],
-            dbname=env_vars[db_name],
-            user=env_vars[username],
-            password=env_vars[password]
-        )
-    except psycopg2.OperationalError:
-        raise_exit("ERROR: Database connection failed.")
-    
+    conn = psycopg2.connect(
+        host=env_vars[host],
+        dbname=env_vars[db_name],
+        user=env_vars[username],
+        password=env_vars[password]
+    )
     dir_name = os.path.dirname(os.path.abspath(__file__))
     with conn.cursor() as cursor, open(f"{dir_name}/sql/create.sql", "r") as f:
         cursor.execute(f.read())
