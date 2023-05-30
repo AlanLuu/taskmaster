@@ -1,7 +1,10 @@
 <?php
     declare(strict_types = 1);
-    //use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\SMTP;
+    use PHPMailer\PHPMailer\Exception; //Used internally by PHPMailer; do not remove
     require_once "util.php";
+    require_once "vendor/autoload.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -95,10 +98,8 @@
             })();
 
             //Handle emailing token here
-            // require_once "resources/PHPMailer/Exception.php";
-            // require_once "resources/PHPMailer/PHPMailer.php";
-            // require_once "resources/PHPMailer/SMTP.php";
             // $mail = new PHPMailer(true);
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
             // $mail->isSMTP();
             // $mail->Host = "";
             // $mail->Port = 465;

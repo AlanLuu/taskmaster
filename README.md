@@ -5,6 +5,7 @@ A simple web application that keeps track of all your tasks that are yet to be s
 Requirements:
 - PHP 8.1+ with the PostgreSQL extension enabled
 - Python 3.x to run the configuration scripts
+- [Composer](https://getcomposer.org/) to install necessary PHP dependencies
 
 First, clone this repository:
 ```
@@ -35,6 +36,17 @@ After this, the virtual environment is no longer needed:
 ```
 deactivate
 rm -rf venv
+```
+
+Next, install necessary dependencies using Composer:
+```
+composer install
+```
+If you don't have Composer installed, run the following commands to install dependencies:
+```
+wget https://getcomposer.org/download/latest-stable/composer.phar
+chmod +x composer.phar
+php composer.phar install
 ```
 
 Finally, to start the server, run the following command:
