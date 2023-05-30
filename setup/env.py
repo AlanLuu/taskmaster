@@ -11,7 +11,8 @@ def create_tables(env_vars, db_var_keys):
     try:
         import psycopg2
     except ImportError:
-        raise_exit("ERROR: Could not import psycopg2, perhaps it's not installed?")
+        print("ERROR: Could not import psycopg2, perhaps it's not installed?")
+        raise_exit("After installing that package, run tables.py to continue setting up the tables.")
     
     host, db_name, username, password = db_var_keys
     conn = psycopg2.connect(
@@ -34,14 +35,17 @@ def main():
         env_file_path += "../"
     env_file_path += env_file_name
     
-    env_var_keys = (
+    env_var_db_keys = (
         "TASK_APP_DB_HOST",
         "TASK_APP_DB_NAME",
         "TASK_APP_DB_USERNAME",
-        "TASK_APP_DB_PASSWORD",
+        "TASK_APP_DB_PASSWORD"
+    )
+    env_var_other_keys = (
         "TASK_APP_CAPTCHA_SITE_TOKEN",
         "TASK_APP_CAPTCHA_SECRET_TOKEN"
     )
+    env_var_keys = env_var_db_keys + env_var_other_keys
     env_vars = {}
 
     print(f"Setting up {env_file_name} file...")
@@ -54,6 +58,8 @@ def main():
             elif answer == "n":
                 raise_exit("Abort.")
     
+    print()
+    print("To leave a variable blank, just press the enter key.")
     for key in env_var_keys:
         value = input(f"{key}: ").strip()
         env_vars[key] = value
@@ -66,7 +72,7 @@ def main():
     while True:
         answer = input("(Requires psycopg2) Create necessary tables in database? [y/n] ")
         if answer == "y":
-            create_tables(env_vars, env_var_keys[:4])
+            create_tables(env_vars, env_var_db_keys)
             print("Tables successfully created.")
             break
         elif answer == "n":
