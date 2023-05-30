@@ -70,7 +70,8 @@ def main():
             print("Tables successfully created.")
             break
         elif answer == "n":
-            raise_exit()
+            print("Exiting without creating necessary tables...")
+            raise_exit("If you change your mind, run tables.py to create them (requires psycopg2).")
 
 if __name__ == "__main__":
     main()
