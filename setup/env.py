@@ -43,7 +43,11 @@ def main():
     )
     env_var_other_keys = (
         "TASK_APP_CAPTCHA_SITE_TOKEN",
-        "TASK_APP_CAPTCHA_SECRET_TOKEN"
+        "TASK_APP_CAPTCHA_SECRET_TOKEN",
+        "TASK_APP_MAIL_HOST",
+        "TASK_APP_MAIL_PORT",
+        "TASK_APP_MAIL_USERNAME",
+        "TASK_APP_MAIL_PASSWORD",
     )
     env_var_keys = env_var_db_keys + env_var_other_keys
     env_vars = {}

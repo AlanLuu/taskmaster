@@ -35,7 +35,7 @@
 
     //Database credentials
     define("DB_HOST", ENV->get("TASK_APP_DB_HOST"));
-    define("DB_PORT", ENV->get("TASK_APP_DB_PORT") ?? "5432");
+    define("DB_PORT", (int) (ENV->get("TASK_APP_DB_PORT") ?? 5432));
     define("DB_NAME", ENV->get("TASK_APP_DB_NAME"));
     define("DB_USERNAME", ENV->get("TASK_APP_DB_USERNAME"));
     define("DB_PASSWORD", ENV->get("TASK_APP_DB_PASSWORD"));
@@ -70,6 +70,7 @@
      * Optional: email credentials used to send password reset emails
      */
     define("MAIL_HOST", ENV->get("TASK_APP_MAIL_HOST"));
+    define("MAIL_PORT", (int) (ENV->get("TASK_APP_MAIL_PORT") ?? 587));
     define("MAIL_USERNAME", ENV->get("TASK_APP_MAIL_USERNAME"));
     define("MAIL_PASSWORD", ENV->get("TASK_APP_MAIL_PASSWORD"));
 

@@ -99,7 +99,7 @@
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;
             $mail->isSMTP();
             $mail->Host = MAIL_HOST;
-            $mail->Port = 465;
+            $mail->Port = MAIL_PORT;
             $mail->SMTPAuth = true;
             $mail->Username = MAIL_USERNAME;
             $mail->Password = MAIL_PASSWORD;
