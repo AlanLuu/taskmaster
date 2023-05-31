@@ -4,7 +4,6 @@
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception; //Used internally by PHPMailer; do not remove
     require_once "util.php";
-    require_once "vendor/autoload.php";
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,6 +64,61 @@
         </p>
         <p>Remember your password? <a href="login.php">Log In</a></p>
 <?php
+    function send_mail(array $options): void {
+        if (!MAIL_HOST || !MAIL_USERNAME || !MAIL_PASSWORD) {
+            if (!MAIL_HOST) {
+                Util::debug_log("MAIL_HOST is not set");
+            }
+            if (!MAIL_USERNAME) {
+                Util::debug_log("MAIL_USERNAME is not set");
+            }
+            if (!MAIL_PASSWORD) {
+                Util::debug_log("MAIL_PASSWORD is not set");
+            }
+            return;
+        }
+        $mail = new PHPMailer(true);
+        $show_msg = function(string $msg): void {
+            echo $msg;
+            Util::debug_log($msg);
+        };
+        $add_contents = function(string $key, callable $add_content) use(&$options): void {
+            if ($options[$key]) {
+                foreach ($options[$key] as $option) {
+                    $add_content($option);
+                }
+            } else {
+                $add_content($options[$key]);
+            }
+        };
+        $option_keys = [
+            "cc" => fn($email) => $mail->addCC($email),
+            "to" => fn($email) => $mail->addAddress($email)
+        ];
+        try {
+            $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            $mail->isSMTP();
+            $mail->Host = MAIL_HOST;
+            $mail->Port = 465;
+            $mail->SMTPAuth = true;
+            $mail->Username = MAIL_USERNAME;
+            $mail->Password = MAIL_PASSWORD;
+            $mail->setFrom(MAIL_USERNAME, WEBSITE_NAME);
+            foreach ($option_keys as $key => $add_content_callback) {
+                $add_contents($key, $add_content_callback);
+            }
+            $mail->Subject = $options["subject"] ?? "";
+            $mail->Body = $options["body"] ?? "";
+            if ($mail->send()) {
+                $show_msg("Message has been sent.");
+            } else {
+                $show_msg("send() returned false: Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            }
+        } catch (Exception $_) {
+            $show_msg("Caught Exception: Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+        }
+    }
+    
     if (isset($_COOKIE['forgotformsent'])) {
         $conn = Util::get_conn();
         $user = Util::sanitize($_COOKIE['resetuser'],
@@ -83,7 +137,7 @@
         $db_contents = pg_fetch_row($result);
         if (([$db_email] = $db_contents ?: [null]) && $email === $db_email) {
             [, $db_id] = $db_contents;
-            
+
             ($generate_token = function() use(&$generate_token, &$conn, $db_id): void {
                 $date = new DateTime("+15 minutes", PACIFIC);
                 $date_str = $date->format("Y-m-d H:i:s");
@@ -97,19 +151,11 @@
                 };
             })();
 
-            //Handle emailing token here
-            // $mail = new PHPMailer(true);
-            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-            // $mail->isSMTP();
-            // $mail->Host = "";
-            // $mail->Port = 465;
-            // $mail->SMTPAuth = true;
-            // $mail->Username = "";
-            // $mail->Password = "";
-            // $mail->setFrom("example@example.com", WEBSITE_NAME);
-            // $mail->addAddress($db_email);
-            // $mail->Subject = "Test email";
-            // $mail->Body = "Hello world!";
+            // send_mail([
+            //     "to" => $db_email,
+            //     "subject" => "Password reset for " . WEBSITE_NAME,
+            //     "body" => "Test email body."
+            // ]);
         }
     }
     if (isset($_POST['resetuser']) && isset($_POST['resetemail'])) {

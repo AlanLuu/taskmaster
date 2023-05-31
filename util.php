@@ -5,6 +5,7 @@
         die();
     }
     require_once "dotenv.php";
+    include_once "vendor/autoload.php";
     
     /**
      * https://www.php.net/manual/en/function.ob-start.php
@@ -34,7 +35,7 @@
 
     //Database credentials
     define("DB_HOST", ENV->get("TASK_APP_DB_HOST"));
-    define("DB_PORT", ENV->get("TASK_APP_DB_PORT") ?: "5432");
+    define("DB_PORT", ENV->get("TASK_APP_DB_PORT") ?? "5432");
     define("DB_NAME", ENV->get("TASK_APP_DB_NAME"));
     define("DB_USERNAME", ENV->get("TASK_APP_DB_USERNAME"));
     define("DB_PASSWORD", ENV->get("TASK_APP_DB_PASSWORD"));
@@ -56,14 +57,21 @@
     }
 
     /*
-     * Technically optional: if TASK_APP_CAPTCHA_SITE_TOKEN or TASK_APP_CAPTCHA_SECRET_TOKEN
+     * Optional: if TASK_APP_CAPTCHA_SITE_TOKEN or TASK_APP_CAPTCHA_SECRET_TOKEN
      * is unset then CAPTCHA functionality will simply be disabled without affecting any other
      * important website functionality.
      */
-    define("CAPTCHA_SITE_TOKEN", ENV->get("TASK_APP_CAPTCHA_SITE_TOKEN") ?: "");
-    define("CAPTCHA_SECRET_TOKEN", ENV->get("TASK_APP_CAPTCHA_SECRET_TOKEN") ?: "");
+    define("CAPTCHA_SITE_TOKEN", ENV->get("TASK_APP_CAPTCHA_SITE_TOKEN"));
+    define("CAPTCHA_SECRET_TOKEN", ENV->get("TASK_APP_CAPTCHA_SECRET_TOKEN"));
     const CAPTCHA_ENABLED = CAPTCHA_SITE_TOKEN && CAPTCHA_SECRET_TOKEN;
     setcookie("captcha_enabled", CAPTCHA_ENABLED ? "1" : "0");
+
+    /*
+     * Optional: email credentials used to send password reset emails
+     */
+    define("MAIL_HOST", ENV->get("TASK_APP_MAIL_HOST"));
+    define("MAIL_USERNAME", ENV->get("TASK_APP_MAIL_USERNAME"));
+    define("MAIL_PASSWORD", ENV->get("TASK_APP_MAIL_PASSWORD"));
 
     /**
      * Util class with helper functions
@@ -218,6 +226,16 @@
             $fp = fopen($file_path, "a");
             fwrite($fp, "[$now] [$ip] $content\n");
             fclose($fp);
+        }
+
+        /**
+         * Logs content to the terminal for debugging purposes
+         * 
+         * @param mixed $content the content to log
+         * @return void
+         */
+        public static function debug_log(mixed $content): void {
+            error_log("$content\n", 3, "php://stderr");
         }
 
         /**

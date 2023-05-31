@@ -65,7 +65,7 @@
         public function get(string $key): mixed {
             return $this->using_dot_env
                 ? ($this->env_vars[$key] ?? null)
-                : (getenv($key) ?? null);
+                : (getenv($key) ?: null);
         }
 
         public function get_env_file_name(): string {
