@@ -83,17 +83,20 @@
             Util::debug_log($msg);
         };
         $add_contents = function(string $key, callable $add_content) use(&$options): void {
-            if ($options[$key]) {
-                foreach ($options[$key] as $option) {
-                    $add_content($option);
+            if (isset($options[$key])) {
+                if (is_array($options[$key])) {
+                    foreach ($options[$key] as $option) {
+                        $add_content($option);
+                    }
+                } else {
+                    $add_content($options[$key]);
                 }
-            } else {
-                $add_content($options[$key]);
             }
         };
         $option_keys = [
             "cc" => fn($email) => $mail->addCC($email),
-            "to" => fn($email) => $mail->addAddress($email)
+            "to" => fn($email) => $mail->addAddress($email),
+            "replyto" => fn($email) => $mail->addReplyTo($email),
         ];
         try {
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;
@@ -101,6 +104,7 @@
             $mail->Host = MAIL_HOST;
             $mail->Port = MAIL_PORT;
             $mail->SMTPAuth = true;
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Username = MAIL_USERNAME;
             $mail->Password = MAIL_PASSWORD;
             $mail->setFrom(MAIL_USERNAME, WEBSITE_NAME);
@@ -112,10 +116,11 @@
             if ($mail->send()) {
                 $show_msg("Message has been sent.");
             } else {
-                $show_msg("send() returned false: Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+                $show_msg("\$mail->send() returned false: Message could not be sent. Mailer Error: <b>{$mail->ErrorInfo}</b>");
             }
         } catch (Exception $_) {
-            $show_msg("Caught Exception: Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            echo "<br> <br>";
+            $show_msg("Caught Exception: Message could not be sent. Mailer Error: <b>{$mail->ErrorInfo}</b>");
         }
     }
     
@@ -151,11 +156,11 @@
                 };
             })();
 
-            // send_mail([
-            //     "to" => $db_email,
-            //     "subject" => "Password reset for " . WEBSITE_NAME,
-            //     "body" => "Test email body."
-            // ]);
+            send_mail([
+                "to" => $db_email,
+                "subject" => "Password reset for " . WEBSITE_NAME,
+                "body" => "Test email body."
+            ]);
         }
     }
     if (isset($_POST['resetuser']) && isset($_POST['resetemail'])) {

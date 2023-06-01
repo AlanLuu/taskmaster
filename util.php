@@ -70,7 +70,7 @@
      * Optional: email credentials used to send password reset emails
      */
     define("MAIL_HOST", ENV->get("TASK_APP_MAIL_HOST"));
-    define("MAIL_PORT", (int) (ENV->get("TASK_APP_MAIL_PORT") ?? 587));
+    define("MAIL_PORT", (int) (ENV->get("TASK_APP_MAIL_PORT") ?? 465));
     define("MAIL_USERNAME", ENV->get("TASK_APP_MAIL_USERNAME"));
     define("MAIL_PASSWORD", ENV->get("TASK_APP_MAIL_PASSWORD"));
 
