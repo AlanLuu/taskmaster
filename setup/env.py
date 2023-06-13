@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 
@@ -6,27 +6,6 @@ def raise_exit(msg = None):
     if msg is not None:
         print(msg)
     raise SystemExit
-
-def create_tables(env_vars, db_var_keys):
-    try:
-        import psycopg2
-    except ImportError:
-        print("ERROR: Could not import psycopg2, perhaps it's not installed?")
-        raise_exit("After installing that package, run tables.py to continue setting up the tables.")
-    
-    host, db_name, username, password = db_var_keys
-    conn = psycopg2.connect(
-        host=env_vars[host],
-        dbname=env_vars[db_name],
-        user=env_vars[username],
-        password=env_vars[password]
-    )
-    dir_name = os.path.dirname(os.path.abspath(__file__))
-    with conn.cursor() as cursor, open(f"{dir_name}/sql/create.sql", "r") as f:
-        cursor.execute(f.read())
-    
-    conn.commit()
-    conn.close()
 
 def main():
     env_file_name = ".env"
@@ -72,16 +51,7 @@ def main():
         for key, value in env_vars.items():
             f.write(f"{key}={value}\n")
     
-    print(f"Successfully wrote to {env_file_name} file.")
-    while True:
-        answer = input("(Requires psycopg2) Create necessary tables in database? [y/n] ")
-        if answer == "y":
-            create_tables(env_vars, env_var_db_keys)
-            print("Tables successfully created.")
-            break
-        elif answer == "n":
-            print("Exiting without creating necessary tables...")
-            raise_exit("If you change your mind, run tables.py to create them (requires psycopg2).")
+    print(f"Successfully wrote variables to {env_file_name} file.")
 
 if __name__ == "__main__":
     main()
