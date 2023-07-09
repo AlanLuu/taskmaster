@@ -151,24 +151,6 @@
         }
 
         /**
-         * I'm a little teapot,
-         * Short and stout.
-         * Here is my handle,
-         * Here is my spout.
-         * When I get all steamed up,
-         * Hear me shout:
-         * "Tip me over and pour me out!"
-         * 
-         * Redirects to teapot.php, which returns HTTP code 418.
-         * 
-         * @return void
-         */
-        public static function im_a_little_teapot(): void {
-            header("Location: teapot.php");
-            die();
-        }
-
-        /**
          * Sanitize a string using an array of callback functions specified by the
          * caller
          */
