@@ -37,6 +37,10 @@ deactivate
 rm -rf venv
 ```
 
+**NOTE**: You must have the following packages installed before installing Composer dependencies. If they're already installed, skip this step. Otherwise, on Debian/Ubuntu, run the following command to install them:
+```
+sudo apt install zip unzip php-zip
+```
 Next, install necessary PHP dependencies using Composer:
 ```
 composer install
