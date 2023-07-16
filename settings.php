@@ -47,8 +47,7 @@
             pg_prepare($conn, "check_email", "SELECT account_id FROM emails WHERE email = $1");
             $check_email_result = pg_fetch_row(pg_execute($conn, "check_email", array($new_email)));
             if (!$check_email_result) { //Email is unique
-                [$account_id_2] = pg_fetch_row(pg_execute($conn, "check_email", array($account_id)));
-                if ($account_id_2 && $account_id === $account_id_2) { //Update email
+                if ($user_email) { //Update email
                     pg_prepare($conn, "update_email", "UPDATE emails SET email = $1 WHERE account_id = $2");
                     pg_execute($conn, "update_email", array($new_email, $account_id));
                 } else { //Set email
