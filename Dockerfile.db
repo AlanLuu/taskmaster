@@ -1,0 +1,9 @@
+# This Dockerfile can be used to create a local postgres database for development purposes.
+
+FROM postgres:latest
+
+ENV POSTGRES_DB=taskmaster
+ENV POSTGRES_USER=taskmaster
+ENV POSTGRES_PASSWORD=taskmaster
+
+COPY setup/sql/create.sql /docker-entrypoint-initdb.d/
