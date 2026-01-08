@@ -60,7 +60,7 @@
             _END;
             die();
         }
-        
+
         $conn = Util::get_conn();
 
         //Remove leading/ending whitespace and special characters from username
@@ -68,7 +68,8 @@
             fn($str) => preg_replace("/[^A-Za-z0-9]/", "", $str));
         $tmp_signup_pass = $_POST['signuppass'];
         $tmp_signup_pass_2 = $_POST['signuppass2'];
-        $tmp_signup_email = trim($_POST['signupemail']) ?: null;
+        $tmp_signup_email = isset($_POST['signupemail'])
+            ? (trim($_POST['signupemail']) ?: null) : null;
 
         //Server side validation
         $username_error = Util::validate_username($tmp_signup_user);
